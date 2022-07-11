@@ -13,8 +13,8 @@
       ansible.builtin.lineinfile:
         dest: /etc/sudoers
         state: present
-        regexp: "^%admin"
-        line: "%admin ALL=(ALL) NOPASSWD: ALL"
+        regexp: "^%sudo"
+        line: "%sudo ALL=(ALL:ALL) NOPASSWD:ALL"
         validate: visudo -cf %s
       become: true
     - name: chezmoi | create chezmoi directory
@@ -100,3 +100,8 @@
           - sops
           - gh
           - chezmoi
+    - name: packages | snap
+      community.general.snap:
+        name:
+          - 1password
+      become: true
