@@ -85,8 +85,15 @@
           - fish
           - codium
           - alacritty
+          - borgbackup
         update_cache: true
       become: true
+    - name: packages-common | python
+      ansible.builtin.pip:
+        name:
+          - vorta
+        state: present
+        extra_args: --user
     - name: packages | brew
       community.general.homebrew:
         name:
