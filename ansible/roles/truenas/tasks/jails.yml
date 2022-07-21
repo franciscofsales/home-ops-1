@@ -1,0 +1,42 @@
+- name: jails | Check if jails exists
+  ansible.builtin.shell:
+    cmd: iocage list | grep {{ item }}
+  loop: "{{ groups['jail'] }}"
+  register: check_jail
+
+- name: Check for Python
+  ansible.builtin.raw: test -e /usr/bin/python
+  changed_when: false
+  failed_when: false
+  register: check_python
+
+- name: Install Python
+  ansible.builtin.raw: pkg install -y python3
+  when: check_python.rc != 0
+
+- name: Enable openssh service
+  community.general.sysrc:
+    name: sshd
+    state: present
+    value: "YES"
+    jail: "{{ item }}"
+  loop: "{{ groups['jails'] }}"
+
+- name: Configure postgresql jail
+  hosts: postgresql
+  become: true
+  become_user: root
+  vars:
+    postgresql_version: 14
+  tasks:
+    - name: Install postgresql server
+      community.general.pkgng:
+        name:
+          - postgresql{{ postgresql_version }}-server
+          - postgresql{{ postgresql_version }}-contrib
+
+    - name: Enable postgresql server
+      community.general.sysrc:
+        name: postgresql
+        state: present
+        value: "YES"

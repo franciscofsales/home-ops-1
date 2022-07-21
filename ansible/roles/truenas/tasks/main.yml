@@ -7,3 +7,6 @@
 
 - ansible.builtin.include_tasks: wireguard.yml
   when: "main_nas == false"
+
+- ansible.builtin.include_tasks: jails.yml
+  when: "main_nas"

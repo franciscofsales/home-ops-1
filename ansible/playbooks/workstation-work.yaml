@@ -86,6 +86,7 @@
           - codium
           - alacritty
           - borgbackup
+          - remmina
         update_cache: true
       become: true
     - name: packages-common | python
