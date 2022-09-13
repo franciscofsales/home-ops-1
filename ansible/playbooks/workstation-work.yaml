@@ -24,14 +24,10 @@
         mode: 0700
     - name: chezmoi | templating chezmoi.toml
       ansible.builtin.blockinfile:
+        src: chezmoi.toml.j2
         path: ~/.config/chezmoi/chezmoi.toml
         create: true
-        mode: 0700
-        block: |
-          [data]
-            alacritty_font_size = 11.0
-            alaritty_window_columns = 150
-            alacritty_window_lines = 40
+        mode: 0600
     - name: gnome | create directories
       ansible.builtin.file:
         state: directory
@@ -80,6 +76,7 @@
       loop:
         - "ppa:mmstick76/alacritty"
         - "ppa:fish-shell/release-3"
+        - "ppa:git-core/ppa"
     - name: packages | apt
       ansible.builtin.apt:
         name:
@@ -94,6 +91,7 @@
           - fish
           - codium
           - alacritty
+          - git
         update_cache: true
       become: true
     - name: packages | brew

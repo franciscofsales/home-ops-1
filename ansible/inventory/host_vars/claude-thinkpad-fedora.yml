@@ -1,0 +1,17 @@
+alacritty:
+  font_size: 9.0
+  window_columns: 100
+  window_lines: 28
+git:
+  email: 27022259+auricom@users.noreply.github.com
+  name: auricom
+  signingkey: DEB9EB925160B8E976C7D4020FF55715FEC3D285
+remmina:
+  font_size: 9
+ssh:
+  default:
+    host: github.com
+    key: ~/.ssh/id_ed25519
+  second:
+    host: github-ldg
+    key: ~/.ssh/ldgid_ed25519

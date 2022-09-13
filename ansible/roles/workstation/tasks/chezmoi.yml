@@ -1,8 +1,4 @@
 ---
-- name: configuration | include vars
-  ansible.builtin.include_vars:
-    file: vars/{{ ansible_facts['nodename'] }}.yml
-
 - name: configuration | create chezmoi directory
   ansible.builtin.file:
     state: directory
