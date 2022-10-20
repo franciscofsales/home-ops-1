@@ -16,18 +16,18 @@
 - block:
     - name: jails | get current FreeBSD release
       ansible.builtin.shell:
-        cmd: freebsd-version -k
+        cmd: freebsd-version -k | cut -f1 -d\-
       register: release
       failed_when: release.rc != 0
 
-    - name: jails | fetch iocage template {{ release.stdout }}
+    - name: jails | fetch iocage template {{ release.stdout }}-RELEASE
       ansible.builtin.shell:
-        cmd: iocage fetch -r {{ release.stdout }}
+        cmd: iocage fetch -r {{ release.stdout }}-RELEASE
       become: true
 
     - name: jails | create jail
       ansible.builtin.shell:
-        cmd: iocage create -r {{ release.stdout }} -n {{ item.item }} dhcp=on boot=on
+        cmd: iocage create -r {{ release.stdout }}-RELEASE -n {{ item.item }} dhcp=on boot=on
       loop: "{{ jails_check.results }}"
       when: item.rc == 1
       become: true

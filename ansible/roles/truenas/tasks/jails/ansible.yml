@@ -1,0 +1,25 @@
+---
+- name: jail-ansible | get jail ip
+  ansible.builtin.shell:
+    cmd: iocage exec ansible ifconfig epair0b | grep 'inet' | awk -F ' ' '{ print $2 }'
+  changed_when: false
+  register: ansible_jail_ip
+  become: true
+
+- name: jail-ansible | ssh-keypair
+  community.crypto.openssh_keypair:
+    type: ed25519
+    path: ~/.ssh/id_ed25519
+
+- name: jail-ansible | get ssh pubkey
+  ansible.builtin.set_fact:
+    pubkey: "{{ lookup('file', '~/.ssh/id_ed25519.pub') }}"
+  delegate_to: "{{ ansible_jail_ip }}"
+
+- name: jail-ansible | deploy pubkey to kubernetes hosts
+  ansible.posix.authorized_key:
+    user: fedora
+    state: present
+    key: "{{ pubkey }}"
+  delegate_to: "{{ item }}"
+  loop: "{{ groups['kubernetes'] }}"
